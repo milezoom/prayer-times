@@ -7,7 +7,7 @@ import (
 )
 
 //LogWriter give file writer to write log file
-func LogWriter() *os.File {
+func LogWriter(prefix string) *os.File {
 	ex, _ := os.Executable()
 	logPath := filepath.Dir(ex) + "/logs"
 
@@ -15,7 +15,12 @@ func LogWriter() *os.File {
 
 	currentDate := time.Now().Local().Format("2006-01-02")
 
-	file, err := os.OpenFile(logPath+"/"+currentDate+".log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if prefix == "" {
+		prefix = "debug"
+	}
+
+	filename := logPath + "/" + prefix + "-" + currentDate + ".log"
+	file, err := os.OpenFile(filename, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
 	}

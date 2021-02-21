@@ -18,12 +18,13 @@ func SetConfig(e *echo.Echo) {
 }
 
 func configLog(e *echo.Echo) {
-	e.Logger.SetOutput(utils.LogWriter())
+	e.Logger.SetOutput(utils.LogWriter("debug"))
 	e.Logger.SetLevel(log.DEBUG)
+	e.Logger.SetHeader("${time_rfc3339} ${level}")
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Skipper: middleware.DefaultSkipper,
-		Output:  utils.LogWriter(),
-		Format:  `[${time_rfc3339}] ${method} ${uri} ${error}`,
+		Output:  utils.LogWriter("access"),
+		Format:  `${time_rfc3339} ${method} ${status} ${uri} ${error}` + "\n",
 	}))
 }
 
